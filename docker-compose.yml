@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  moloch-elasticsearch:
+    image: elasticsearch:7.7.1
+    hostname: moloch-elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+    environment:
+      - cluster.name=moloch
+      - http.host=0.0.0.0
+      - discovery.type=single-node
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+  moloch:
+    build:
+      context: .
+      args:
+        ES_HOST: "moloch-elasticsearch"
+        ES_PORT: "9200"
+        MOLOCH_INTERFACE: "eth0"
+        MOLOCH_PASSWORD: "moloch"
+    hostname: moloch
+    restart: always
+    depends_on:
+      - moloch-elasticsearch
+    ports:
+      - "8005:8005"
+    links:
+      - moloch-elasticsearch
+

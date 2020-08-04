@@ -1,27 +1,30 @@
 FROM ubuntu:18.04
-MAINTAINER Mathieu Monin - https://github.com/mathiem
 
 # Install dependencies that are needed, but not set in the moloch.deb file
 RUN apt-get -qq update && \
     apt-get install -yq curl libmagic-dev wget logrotate
 
 # Declare args
-ARG MOLOCH_VERSION=2.3.1
+ARG MOLOCH_VERSION=2.3.2
 ARG UBUNTU_VERSION=18.04
 ARG MOLOCH_DEB_PACKAGE="moloch_"$MOLOCH_VERSION"-1_amd64.deb"
+ARG ES_HOST=elasticsearch
+ARG ES_PORT=9200
+ARG MOLOCH_INTERFACE=eth0
+ARG MOLOCH_PASSWORD=changeme
 
 # Declare envs vars for each arg
 ENV MOLOCH_VERSION $MOLOCH_VERSION
-ENV ES_HOST "elasticsearch"
-ENV ES_PORT 9200
+ENV ES_HOST $ES_HOST
+ENV ES_PORT $ES_PORT
 ENV MOLOCH_LOCALELASTICSEARCH no
 ENV MOLOCH_ELASTICSEARCH "http://"$ES_HOST":"$ES_PORT
-ENV MOLOCH_INTERFACE "eth0"
-ENV MOLOCH_PASSWORD "admin"
+ENV MOLOCH_INTERFACE $MOLOCH_INTERFACE
+ENV MOLOCH_PASSWORD $MOLOCH_PASSWORD
 ENV MOLOCH_ADMIN_PASSWORD $MOLOCH_PASSWORD
-ENV MOLOCH_HOSTNAME "localhost"
+ENV MOLOCH_HOSTNAME "moloch"
 ENV MOLOCHDIR "/data/moloch"
-ENV CAPTURE "off"
+ENV CAPTURE "on"
 ENV VIEWER "on"
 
 # Install Moloch
